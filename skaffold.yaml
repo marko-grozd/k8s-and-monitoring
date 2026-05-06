@@ -1,0 +1,46 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+metadata:
+  name: k8s-skeleton
+
+# Kako buildujemo Docker slike
+build:
+  artifacts:
+    - image: k8s-skeleton-frontend
+      context: frontend
+      docker:
+        dockerfile: Dockerfile
+        target: production
+    - image: k8s-skeleton-backend
+      context: backend
+      docker:
+        dockerfile: Dockerfile
+
+# Kako deployujemo na k8s
+manifests:
+  rawYaml:
+    - k8s/namespace.yaml
+    - k8s/postgres/secret.yaml
+    - k8s/postgres/pvc.yaml
+    - k8s/postgres/statefulset.yaml
+    - k8s/postgres/service.yaml
+    - k8s/redis/redis.yaml
+    - k8s/backend/deployment.yaml
+    - k8s/frontend/deployment.yaml
+    - k8s/ingress/ingress.yaml
+
+deploy:
+  kubectl: {}
+
+# Port-forward za lokalni pristup (bez Ingress-a)
+portForward:
+  - resourceType: service
+    resourceName: frontend-service
+    namespace: skeleton
+    port: 80
+    localPort: 3000
+  - resourceType: service
+    resourceName: backend-service
+    namespace: skeleton
+    port: 8000
+    localPort: 8000

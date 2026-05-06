@@ -1,0 +1,30 @@
+#example of portforwarding:
+
+minikube start
+kubectl port-forward svc/prometheus-grafana 3001:80 -n monitoring &
+kubectl port-forward svc/backend-service 8000:8000 -n skeleton &
+kubectl port-forward svc/frontend-service 3000:80 -n skeleton &
+
+
+# debugging of missing package:
+
+docker run --rm k8s-skeleton-backend:latest pip show setuptools
+docker run --rm k8s-skeleton-backend:latest pip list | grep setuptools
+
+# installing loki with helm
+
+helm install loki grafana/loki \
+  --namespace monitoring \
+  --set loki.auth_enabled=false \
+  --set loki.commonConfig.replication_factor=1 \
+  --set loki.storage.type=filesystem \
+  --set deploymentMode=SingleBinary \
+  --set singleBinary.replicas=1 \
+  --set read.replicas=0 \
+  --set write.replicas=0 \
+  --set backend.replicas=0 \
+  --set monitoring.selfMonitoring.enabled=false \
+  --set monitoring.selfMonitoring.grafanaAgent.installOperator=false \
+  --set test.enabled=false \
+  --set loki.useTestSchema=true
+

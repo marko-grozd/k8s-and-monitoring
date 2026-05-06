@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: skeleton
+spec:
+  accessModes:
+    - ReadWriteOnce       # Jedan node u isto vreme moze citati/pisati
+  resources:
+    requests:
+      storage: 1Gi        # 1GB za development
+  # storageClassName: standard  # Odkomentarisi za cloud (gp2 na AWS, standard na GKE)

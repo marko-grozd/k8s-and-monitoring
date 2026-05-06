@@ -1,0 +1,19 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+asyncpg==0.29.0
+redis==5.0.8
+pydantic==2.9.2
+prometheus-fastapi-instrumentator==7.0.0
+
+# Logovanje
+structlog==24.4.0
+
+# OpenTelemetry tracing
+opentelemetry-api==1.27.0
+opentelemetry-sdk==1.27.0
+opentelemetry-instrumentation-fastapi==0.48b0
+opentelemetry-instrumentation-asyncpg==0.48b0
+opentelemetry-instrumentation-redis==0.48b0
+opentelemetry-exporter-otlp-proto-grpc==1.27.0
+
+setuptools>=69.0.0
