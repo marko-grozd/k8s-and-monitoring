@@ -71,3 +71,37 @@ build: ## Build Docker slike lokalno
 # ── Skaliranje ────────────────────────────────────────────────────────────────
 scale-backend: ## Skaliraj backend (make scale-backend REPLICAS=5)
 	kubectl scale deployment backend --replicas=$(REPLICAS) -n $(NAMESPACE)
+
+# ── Monitoring ────────────────────────────────────────────────────────────────
+monitoring-up: ## Deploy monitoring stack
+	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	helm repo add grafana https://grafana.github.io/helm-charts
+	helm repo update
+	kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+	helm upgrade --install prometheus prometheus-community/kube-prometheus-stack \
+		-n monitoring \
+		-f k8s/monitoring/helm-values/prometheus-stack.yaml
+	helm upgrade --install loki grafana/loki \
+		-n monitoring \
+		-f k8s/monitoring/helm-values/loki.yaml
+	helm upgrade --install promtail grafana/promtail \
+		-n monitoring \
+		-f k8s/monitoring/helm-values/promtail.yaml
+
+monitoring-down: ## Ukloni monitoring stack
+	helm uninstall prometheus -n monitoring || true
+	helm uninstall loki -n monitoring || true
+	helm uninstall promtail -n monitoring || true
+	kubectl delete namespace monitoring || true
+
+monitoring-status: ## Status monitoring stacka
+	@echo "\n=== Helm Releases ==="
+	helm list -n monitoring
+	@echo "\n=== Pods ==="
+	kubectl get pods -n monitoring
+
+pf-grafana: ## Port-forward Grafana na localhost:3001
+	kubectl port-forward svc/prometheus-grafana 3001:80 -n monitoring
+
+pf-loki: ## Port-forward Loki na localhost:3100
+	kubectl port-forward svc/loki 3100:3100 -n monitoring
