@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: skeleton-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/marko-grozd/k8s-and-monitoring.git
+    targetRevision: HEAD
+    path: helm/skeleton-app
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: skeleton
+  syncPolicy:
+    automated:
+      prune: true        # Brise resurse koji nisu u Gitu
+      selfHeal: true     # Vraca na Git stanje ako neko rucno menja
+    syncOptions:
+      - CreateNamespace=true

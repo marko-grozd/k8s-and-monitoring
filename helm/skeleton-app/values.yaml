@@ -3,7 +3,7 @@ namespace: skeleton
 
 # Backend
 backend:
-  replicas: 2
+  replicas: 1
   image: k8s-skeleton-backend
   tag: latest
   port: 8000
@@ -22,7 +22,7 @@ backend:
 
 # Frontend
 frontend:
-  replicas: 2
+  replicas: 1
   image: k8s-skeleton-frontend
   tag: latest
   port: 80
