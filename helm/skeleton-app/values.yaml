@@ -1,0 +1,62 @@
+# Global
+namespace: skeleton
+
+# Backend
+backend:
+  replicas: 2
+  image: k8s-skeleton-backend
+  tag: latest
+  port: 8000
+  env:
+    APP_ENV: production
+    APP_VERSION: "1.0.0"
+    REDIS_URL: redis://skeleton-app-redis:6379
+    DATABASE_URL: postgresql://postgres:postgres@skeleton-app-postgres:5432/appdb
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# Frontend
+frontend:
+  replicas: 2
+  image: k8s-skeleton-frontend
+  tag: latest
+  port: 80
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "128Mi"
+
+# PostgreSQL
+postgres:
+  image: postgres:16-alpine
+  port: 5432
+  storage: 1Gi
+  credentials:
+    user: postgres
+    password: postgres
+    db: appdb
+
+# Redis
+redis:
+  image: redis:7-alpine
+  port: 6379
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+
+# Ingress
+ingress:
+  enabled: true
+  host: skeleton-app.local

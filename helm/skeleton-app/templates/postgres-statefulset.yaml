@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "skeleton-app.fullname" . }}-postgres
+  labels:
+    app: {{ include "skeleton-app.fullname" . }}-postgres
+spec:
+  serviceName: {{ include "skeleton-app.fullname" . }}-postgres
+  selector:
+    matchLabels:
+      app: {{ include "skeleton-app.fullname" . }}-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "skeleton-app.fullname" . }}-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.postgres.image }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.postgres.port }}
+          env:
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgres.credentials.user }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.postgres.credentials.password }}"
+            - name: POSTGRES_DB
+              value: "{{ .Values.postgres.credentials.db }}"
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.postgres.storage }}

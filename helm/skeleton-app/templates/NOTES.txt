@@ -1,0 +1,26 @@
+1. Get the application URL by running these commands:
+{{- if .Values.ingress.enabled }}
+  http://{{ .Values.ingress.host }}
+{{- else }}
+  kubectl port-forward svc/{{ include "skeleton-app.fullname" . }}-frontend 8080:{{ .Values.frontend.port }}
+  http://localhost:8080
+{{- end }}
+
+2. Check the status of your deployment:
+  kubectl get pods -n {{ .Values.namespace }}
+  kubectl get svc -n {{ .Values.namespace }}
+
+3. View backend logs:
+  kubectl logs -n {{ .Values.namespace }} -l app={{ include "skeleton-app.fullname" . }}-backend
+
+4. View frontend logs:
+  kubectl logs -n {{ .Values.namespace }} -l app={{ include "skeleton-app.fullname" . }}-frontend
+
+5. Access PostgreSQL:
+  kubectl exec -it -n {{ .Values.namespace }} {{ include "skeleton-app.fullname" . }}-postgres-0 -- psql -U {{ .Values.postgres.credentials.user }} -d {{ .Values.postgres.credentials.db }}
+
+6. Scale deployments (example):
+  kubectl scale deployment {{ include "skeleton-app.fullname" . }}-backend --replicas=3 -n {{ .Values.namespace }}
+
+7. Uninstall the chart:
+  helm uninstall {{ .Release.Name }}

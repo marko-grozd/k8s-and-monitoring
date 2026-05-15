@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skeleton-app.fullname" . }}-frontend
+  labels:
+    app: {{ include "skeleton-app.fullname" . }}-frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "skeleton-app.fullname" . }}-frontend
+  ports:
+    - port: {{ .Values.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}
+      protocol: TCP
+      name: http

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skeleton-app.fullname" . }}-redis
+  labels:
+    app: {{ include "skeleton-app.fullname" . }}-redis
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "skeleton-app.fullname" . }}-redis
+  ports:
+    - port: {{ .Values.redis.port }}
+      targetPort: {{ .Values.redis.port }}
+      protocol: TCP
+      name: redis
