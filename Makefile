@@ -87,6 +87,7 @@ monitoring-up: ## Deploy monitoring stack
 	helm upgrade --install promtail grafana/promtail \
 		-n monitoring \
 		-f k8s/monitoring/helm-values/promtail.yaml
+	kubectl apply -f k8s/monitoring/grafana/dashboard-configmap.yaml
 
 monitoring-down: ## Ukloni monitoring stack
 	helm uninstall prometheus -n monitoring || true

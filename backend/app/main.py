@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import asyncpg
 import redis.asyncio as aioredis
+import asyncio
 
 # OpenTelemetry
 from opentelemetry import trace
@@ -238,3 +239,9 @@ async def delete_item(item_id: int):
 @app.get("/")
 async def root():
     return {"message": "K8s Skeleton API", "docs": "/docs"}
+
+@app.get("/api/slow")
+async def slow_endpoint():
+    """Test endpoint za simulaciju sporog zahteva"""
+    await asyncio.sleep(5)  # Ceka 5 sekundi
+    return {"message": "slow response"}
