@@ -12,6 +12,13 @@ singleBinary:
   replicas: 1
   nodeSelector:
     role: monitoring
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 1Gi
+      cpu: 500m
 
 read:
   replicas: 0

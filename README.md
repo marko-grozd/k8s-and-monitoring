@@ -17,3 +17,14 @@ simple app for testing kubernetes and helm
  ██║  ██╗╚█████╔╝███████║
  ╚═╝  ╚═╝ ╚════╝ ╚══════╝
 ```
+#how to start with makefile
+
+make k8s-up           # Deploy aplikacije
+make k8s-down         # Obrisi aplikaciju
+make k8s-status       # Status svih resursa
+make monitoring-up    # Deploy monitoring stacka
+make monitoring-down  # Obrisi monitoring
+make monitoring-status # Status monitoringa
+make logs-backend     # Logovi backenda
+make pf-grafana       # Port-forward Grafana
+make pf-backend       # Port-forward backend

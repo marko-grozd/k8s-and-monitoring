@@ -28,3 +28,77 @@ helm install loki grafana/loki \
   --set test.enabled=false \
   --set loki.useTestSchema=true
 
+# Nodes
+
+kubectl get nodes                          # Lista nodova
+kubectl get nodes -o wide                  # Sa IP adresama i detaljima
+kubectl describe node <ime>               # Detalji noda
+kubectl top nodes                          # CPU/RAM po nodu
+kubectl label node <ime> role=monitoring  # Dodaj label
+
+#Pods
+
+kubectl get pods -n <namespace>            # Lista Podova
+kubectl get pods -n <namespace> -o wide    # Sa nodom i IP-om
+kubectl get pods -A                        # Svi Podovi u svim namespacima
+kubectl describe pod <ime> -n <namespace> # Detalji Poda
+kubectl logs -l app=<ime> -n <namespace>  # Logovi po labelu
+kubectl logs <pod> -n <namespace> --previous  # Logovi prethodnog Poda
+kubectl top pods -n <namespace>           # CPU/RAM po Podu
+kubectl delete pod <ime> -n <namespace>   # Restart Poda
+
+portforwarding
+
+kubectl port-forward svc/<servis> <local>:<remote> -n <namespace> &
+# Primeri:
+kubectl port-forward svc/skeleton-app-backend 8000:8000 -n skeleton &
+kubectl port-forward svc/prometheus-grafana 3001:80 -n monitoring &
+kubectl port-forward svc/argocd-server 8080:443 -n argocd &
+kubectl port-forward svc/prometheus-operated 9090:9090 -n monitoring &
+kubectl port-forward svc/loki 3100:3100 -n monitoring &
+
+# Ubij sve port-forwardove
+pkill -f "kubectl port-forward"
+
+#Deployments
+kubectl get deployments -n <namespace>
+kubectl rollout restart deployment/<ime> -n <namespace>   # Restart
+kubectl rollout status deployment/<ime> -n <namespace>    # Prati status
+kubectl scale deployment <ime> --replicas=3 -n <namespace> # Skaliraj
+
+#helm
+
+helm list -n <namespace>                   # Lista instaliranih chartova
+helm install <ime> <chart> -f values.yaml  # Instalacija
+helm upgrade <ime> <chart> -f values.yaml  # Update
+helm upgrade --install <ime> <chart> -f values.yaml  # Install ili update
+helm uninstall <ime> -n <namespace>        # Deinstalacija
+helm get values <ime> -n <namespace>       # Trenutne vrednosti
+helm show values <chart>                   # Default vrednosti charta
+helm history <ime> -n <namespace>          # Istorija deployeva
+helm rollback <ime> <revision> -n <namespace>  # Rollback
+helm upgrade <ime> <chart> --dry-run       # Test bez primene
+
+services
+
+kubectl get svc -n <namespace>             # Lista servisa
+kubectl get endpoints -n <namespace>       # Lista endpointa
+
+k3s
+
+# Pokretanje/gašenje
+sudo systemctl start k3s                   # Pokreni control-plane
+sudo systemctl stop k3s                    # Ugasi control-plane
+ssh user@<ip> "sudo systemctl start k3s-agent"  # Pokreni worker
+ssh user@<ip> "sudo systemctl stop k3s-agent"   # Ugasi worker
+
+# Slike
+docker save <slika>:latest | sudo k3s ctr images import -  # Import slike
+sudo k3s ctr images list | grep <ime>     # Lista slika
+
+#debugging
+
+kubectl exec -it <pod> -n <namespace> -- <komanda>   # Shell u Pod
+kubectl auth can-i list pods -n <namespace>           # Proveri RBAC
+kubectl get events -n <namespace> --sort-by='.lastTimestamp'  # Eventi
+kubectl describe pod <ime> -n <namespace> | grep -A10 Events  # Events Poda
