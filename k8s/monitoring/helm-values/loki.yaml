@@ -10,11 +10,15 @@ loki:
 
 singleBinary:
   replicas: 1
+  nodeSelector:
+    role: monitoring
 
 read:
   replicas: 0
+
 write:
   replicas: 0
+
 backend:
   replicas: 0
 
@@ -26,9 +30,16 @@ monitoring:
 
 test:
   enabled: false
+
 lokiCanary:
   enabled: false
+
 chunksCache:
   enabled: false
+
 resultsCache:
   enabled: false
+
+gateway:
+  nodeSelector:
+    role: monitoring

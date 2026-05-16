@@ -4,8 +4,9 @@ namespace: skeleton
 # Backend
 backend:
   replicas: 2
-  image: k8s-skeleton-backend
+  image: docker.io/library/k8s-skeleton-backend
   tag: latest
+  imagePullPolicy: Never
   port: 8000
   env:
     APP_ENV: production
@@ -23,9 +24,10 @@ backend:
 # Frontend
 frontend:
   replicas: 1
-  image: k8s-skeleton-frontend
+  image: docker.io/library/k8s-skeleton-frontend
   tag: latest
   port: 80
+  ImagePullPolicy: Never
   resources:
     requests:
       cpu: "50m"
