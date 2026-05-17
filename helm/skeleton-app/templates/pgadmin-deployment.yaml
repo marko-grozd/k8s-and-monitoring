@@ -1,0 +1,51 @@
+{{- if .Values.pgadmin.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "skeleton-app.fullname" . }}-pgadmin
+  labels:
+    app: {{ include "skeleton-app.fullname" . }}-pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "skeleton-app.fullname" . }}-pgadmin
+  template:
+    metadata:
+      labels:
+        app: {{ include "skeleton-app.fullname" . }}-pgadmin
+    spec:
+      containers:
+        - name: pgadmin
+          image: "{{ .Values.pgadmin.image }}:{{ .Values.pgadmin.tag }}"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.pgadmin.port }}
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: "{{ .Values.pgadmin.credentials.email }}"
+            - name: PGADMIN_DEFAULT_PASSWORD
+              value: "{{ .Values.pgadmin.credentials.password }}"
+          resources:
+            requests:
+              memory: {{ .Values.pgadmin.resources.requests.memory }}
+              cpu: {{ .Values.pgadmin.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.pgadmin.resources.limits.memory }}
+              cpu: {{ .Values.pgadmin.resources.limits.cpu }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "skeleton-app.fullname" . }}-pgadmin
+  labels:
+    app: {{ include "skeleton-app.fullname" . }}-pgadmin
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ include "skeleton-app.fullname" . }}-pgadmin
+  ports:
+    - port: 80
+      targetPort: {{ .Values.pgadmin.port }}
+{{- end }}
