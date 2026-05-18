@@ -27,6 +27,8 @@ frontend:
   image: docker.io/library/k8s-skeleton-frontend
   tag: latest
   port: 80
+  env:
+    VITE_API_URL: http://skeleton-app-backend:8000
   ImagePullPolicy: Never
   resources:
     requests:
