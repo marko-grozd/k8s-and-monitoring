@@ -4,7 +4,7 @@ namespace: skeleton
 # Backend
 backend:
   replicas: 2
-  image: docker.io/library/k8s-skeleton-backend
+  image: localhost/k8s-skeleton-backend
   tag: latest
   imagePullPolicy: Never
   port: 8000
@@ -24,7 +24,7 @@ backend:
 # Frontend
 frontend:
   replicas: 1
-  image: docker.io/library/k8s-skeleton-frontend
+  image: localhost/k8s-skeleton-frontend
   tag: latest
   port: 80
   env:
