@@ -4,8 +4,10 @@ metadata:
   name: {{ include "skeleton-app.fullname" . }}
   labels:
     app: {{ include "skeleton-app.fullname" . }}
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   rules:
     - host: {{ .Values.ingress.host | quote }}
       http:
