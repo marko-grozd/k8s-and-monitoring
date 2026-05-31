@@ -6,6 +6,7 @@ metadata:
     app: {{ include "skeleton-app.fullname" . }}
   annotations:
     traefik.ingress.kubernetes.io/router.entrypoints: web
+    kubernetes.io/ingress.class: traefik
 spec:
   ingressClassName: traefik
   rules:
