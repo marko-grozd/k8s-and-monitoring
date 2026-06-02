@@ -1,6 +1,4 @@
 grafana:
-  nodeSelector:
-    role: monitoring
   adminPassword: admin123
   plugins: []
   grafana.ini:
@@ -29,14 +27,9 @@ grafana:
       memory: 1Gi
       cpu: 500m
 
-prometheusOperator:
-  nodeSelector:
-    role: monitoring
 
 prometheus:
   prometheusSpec:
-    nodeSelector:
-      role: monitoring
     retention: 24h
     additionalScrapeConfigs:
       - job_name: "backend-direct"
@@ -46,11 +39,3 @@ prometheus:
         scrape_interval: 15s
 alertmanager:
   enabled: false
-
-kube-state-metrics:
-  nodeSelector:
-    role: monitoring
-
-prometheus-node-exporter:
-  nodeSelector:
-    role: monitoring

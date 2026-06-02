@@ -10,8 +10,6 @@ loki:
 
 singleBinary:
   replicas: 1
-  nodeSelector:
-    role: monitoring
   resources:
     requests:
       memory: 256Mi
@@ -47,6 +45,3 @@ chunksCache:
 resultsCache:
   enabled: false
 
-gateway:
-  nodeSelector:
-    role: monitoring
