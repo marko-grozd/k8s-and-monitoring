@@ -3,10 +3,10 @@ namespace: skeleton
 
 # Backend
 backend:
-  replicas: 2
-  image: localhost/k8s-skeleton-backend
+  replicas: 1
+  image: k8sskeletonregistry.azurecr.io/k8s-skeleton-backend
   tag: latest
-  imagePullPolicy: Never
+  imagePullPolicy: Always
   port: 8000
   env:
     APP_ENV: production
@@ -24,12 +24,10 @@ backend:
 # Frontend
 frontend:
   replicas: 1
-  image: localhost/k8s-skeleton-frontend
+  image: k8sskeletonregistry.azurecr.io/k8s-skeleton-frontend
   tag: latest
   port: 80
-  env:
-    VITE_API_URL: http://skeleton-app-backend:8000
-  ImagePullPolicy: Never
+  imagePullPolicy: Always
   resources:
     requests:
       cpu: "50m"
@@ -43,6 +41,8 @@ postgres:
   image: postgres:16-alpine
   port: 5432
   storage: 1Gi
+  env:
+    PGDATA: /var/lib/postgresql/data/pgdata
   credentials:
     user: postgres
     password: postgres
@@ -63,7 +63,7 @@ redis:
 # Ingress
 ingress:
   enabled: true
-  host: skeleton-app.local
+  host: "74.248.104.182.nip.io"
 
 pgadmin:
   enabled: true
