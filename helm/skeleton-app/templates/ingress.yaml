@@ -4,8 +4,14 @@ metadata:
   name: {{ include "skeleton-app.fullname" . }}
   labels:
     app: {{ include "skeleton-app.fullname" . }}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: skeleton-tls-secret
   rules:
     - host: {{ .Values.ingress.host | quote }}
       http:

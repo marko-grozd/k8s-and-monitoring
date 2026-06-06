@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pgadmin-ingress
+  namespace: skeleton
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - pgadmin.74.248.104.182.nip.io
+      secretName: pgadmin-tls-secret
+  rules:
+    - host: pgadmin.74.248.104.182.nip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: skeleton-app-pgadmin
+                port:
+                  number: 80
